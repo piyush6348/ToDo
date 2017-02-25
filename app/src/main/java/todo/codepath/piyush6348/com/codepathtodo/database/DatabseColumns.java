@@ -28,8 +28,7 @@ public class DatabseColumns {
     @NotNull
     public static final String TIME = "time";
 
-    @DataType(DataType.Type.INTEGER)
+    @DataType(DataType.Type.TEXT)
     @NotNull
-    public static final String SORTING = "sorting";
-
+    public static final String DATE = "date";
 }
