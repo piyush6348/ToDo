@@ -14,18 +14,22 @@ public class DatabseColumns {
 
     @DataType(DataType.Type.TEXT)
     @NotNull
-    public static final String VIDEOID = "videoId";
-
-    @DataType(DataType.Type.TEXT)
-    @NotNull
     public static final String TITLE = "title";
 
     @DataType(DataType.Type.TEXT)
     @NotNull
     public static final String DESCRIPTION = "description";
 
-    @DataType(DataType.Type.TEXT)
+    @DataType(DataType.Type.INTEGER)
     @NotNull
-    public static final String URL = "url";
+    public static final String PRIORITY ="priority";
+
+    @DataType(DataType.Type.INTEGER)
+    @NotNull
+    public static final String TIME = "time";
+
+    @DataType(DataType.Type.INTEGER)
+    @NotNull
+    public static final String SORTING = "sorting";
 
 }
