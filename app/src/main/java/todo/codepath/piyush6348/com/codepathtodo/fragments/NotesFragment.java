@@ -30,14 +30,14 @@ import todo.codepath.piyush6348.com.codepathtodo.model.ToDoItem;
 public class NotesFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
     private Spinner spinner;
     private static final String[]paths = {"High", "Low"};
-    private Button done,cancel;
+    private Button done,cancel,delete;
     private DatePicker datePicker;
     private EditText todoTitle,todoDescription;
     private String date;
     private String title,desc;
     private int priority=1,priorityNumber;
     private long time=0;
-    Cursor cursorToEdit;
+    Cursor cursorToEdit=null;
     public NotesFragment()
     {
 
@@ -87,6 +87,18 @@ public class NotesFragment extends DialogFragment implements AdapterView.OnItemS
             }
         });
 
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(getArguments().getBoolean("editable"))
+                {
+                    getActivity().getContentResolver().delete(QuoteProvider.Quotes.CONTENT_URI,
+                            DatabseColumns.ID+"=?",new String[]{String.valueOf(getArguments().getInt("position"))});
+                }
+                    getDialog().dismiss();
+            }
+        });
+
         Boolean edittable=getArguments().getBoolean("editable");
         if(edittable)
         {
@@ -118,17 +130,19 @@ public class NotesFragment extends DialogFragment implements AdapterView.OnItemS
         else
             spinner.setSelection(1);
 
-        /*
-        int day=Integer.parseInt(date.substring(0,date.indexOf('-')-1));
-        int mon=Integer.parseInt(date.substring(date.indexOf('-')+1,date.indexOf('/')-1));
-        int yr=Integer.parseInt(date.substring(date.indexOf('/')+1,date.length()-1));*/
+
+        int day=Integer.parseInt(date.substring(0,date.indexOf('/')));
+        int mon=Integer.parseInt(date.substring(date.indexOf('/')+1,date.lastIndexOf('/')));
+        int yr=Integer.parseInt(date.substring(date.lastIndexOf('/')+1,date.length()));
         //datePicker.setMaxDate();
-        //Log.e( "setAllItems: ",""+day+" "+mon+" "+yr);
+        datePicker.updateDate(yr,mon-1,day);
+        Log.e( "setAllItems: ",""+day+" "+mon+" "+yr);
+
     }
 
     private void insertInDatabase() {
         //date=datePicker.getDayOfMonth()+"-"+(datePicker.getMonth()+1)+"-"+datePicker.getYear();
-        date=datePicker.getDayOfMonth()+"-"+(datePicker.getMonth()+1)+"/"+datePicker.getYear();
+        date=datePicker.getDayOfMonth()+"/"+(datePicker.getMonth()+1)+"/"+datePicker.getYear();
         Calendar calendar=Calendar.getInstance();
         time=calendar.getTimeInMillis();
 
@@ -170,6 +184,7 @@ public class NotesFragment extends DialogFragment implements AdapterView.OnItemS
         datePicker=(DatePicker) view.findViewById(R.id.date_picker);
         todoTitle=(EditText)view.findViewById(R.id.todo_title);
         todoDescription=(EditText)view.findViewById(R.id.todo_description);
+        delete=(Button)view.findViewById(R.id.delete);
     }
 
     @Override

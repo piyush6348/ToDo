@@ -54,13 +54,13 @@
             android:textSize="18sp"
             android:text="Priority"
             android:id="@+id/priority"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
             android:layout_height="wrap_content" />
         <Spinner
             android:id="@+id/spinner"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/priority"
-            android:textColor="@color/black"
+            android:textColor="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -87,23 +87,31 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:weightSum="3"
+        android:background="@color/colorPrimary"
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content">
         <Button
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:id="@+id/cancel_button"
+            android:background="@android:color/transparent"
+            android:textColor="@color/white"
             android:text="Cancel"
             android:layout_height="match_parent" />
         <Button
             android:layout_width="match_parent"
             android:id="@+id/delete"
+            android:layout_margin="0dp"
             android:layout_weight="1"
+            android:textColor="@color/white"
+            android:background="@android:color/transparent"
             android:text="Delete"
             android:layout_height="match_parent" />
         <Button
             android:layout_width="match_parent"
             android:text="Done"
+            android:textColor="@color/white"
+            android:background="@android:color/transparent"
             android:id="@+id/done_button"
             android:layout_weight="1"
             android:layout_height="match_parent" />

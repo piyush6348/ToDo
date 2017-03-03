@@ -31,11 +31,12 @@ public class VideoListCursorAdapter extends CursorRecyclerViewAdapter<VideoListC
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView headline;
-        public TextView description;
+        public TextView description,date;
         public ViewHolder(View view) {
             super(view);
             headline = (TextView) view.findViewById(R.id.heading);
             description=(TextView)view.findViewById(R.id.description);
+            date=(TextView)view.findViewById(R.id.date);
             view.setOnClickListener(this);
 
 
@@ -64,6 +65,7 @@ public class VideoListCursorAdapter extends CursorRecyclerViewAdapter<VideoListC
     public void onBindViewHolder(ViewHolder viewHolder, Cursor cursor) {
         viewHolder.headline.setText(cursor.getString(cursor.getColumnIndex("title")));
         viewHolder.description.setText(cursor.getString(cursor.getColumnIndex("description")));
+        viewHolder.date.setText(cursor.getString(cursor.getColumnIndex(DatabseColumns.DATE)));
     }
 
     private void newToDoFunction(int id) {

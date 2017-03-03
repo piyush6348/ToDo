@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         context=this;
         getSupportLoaderManager().initLoader(0, null,this);
         //recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this,LinearLayoutManager.VERTICAL,false));
-        recyclerView.setLayoutManager(new GridLayoutManager(context,3));
+        recyclerView.setLayoutManager(new GridLayoutManager(context,2));
         recyclerView.setHasFixedSize(true);
         c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI, null, null, null, null);
         videoListCursorAdapter = new VideoListCursorAdapter(MainActivity.this, c);
