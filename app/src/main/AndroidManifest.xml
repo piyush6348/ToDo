@@ -15,6 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="todo.codepath.piyush6348.com.codepathtodo.database.QuoteProvider"
+            android:name="todo.codepath.piyush6348.com.codepathtodo.database.generated.QuoteProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>

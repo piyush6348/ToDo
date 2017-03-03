@@ -2,8 +2,10 @@ package todo.codepath.piyush6348.com.codepathtodo.fragments;
 
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,15 +37,18 @@ public class NotesFragment extends DialogFragment implements AdapterView.OnItemS
     private String title,desc;
     private int priority=1,priorityNumber;
     private long time=0;
+    Cursor cursorToEdit;
     public NotesFragment()
     {
 
     }
-    public static NotesFragment newInstance(String title)
+    public static NotesFragment newInstance(String title,boolean edit,int position)
     {
         NotesFragment fragment=new NotesFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
+        args.putBoolean("editable",edit);
+        args.putInt("position",position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,7 +73,10 @@ public class NotesFragment extends DialogFragment implements AdapterView.OnItemS
             public void onClick(View view) {
                 if(validate())
                 {
+                   // if(!getArguments().getBoolean("editable"))
                     insertInDatabase();
+                    //else
+                    //    update();
                 }
             }
         });
@@ -78,11 +86,49 @@ public class NotesFragment extends DialogFragment implements AdapterView.OnItemS
                 getDialog().dismiss();
             }
         });
+
+        Boolean edittable=getArguments().getBoolean("editable");
+        if(edittable)
+        {
+            int position=getArguments().getInt("position");
+
+            Log.e("onCreateView: ",""+String.valueOf(position));
+            cursorToEdit=getActivity().getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                    null, DatabseColumns.ID+"=?",new String[]{String.valueOf(position)},null);
+            cursorToEdit.moveToFirst();
+
+            setAllItems(cursorToEdit);
+            Log.e("onCreateView: ",cursorToEdit.getString(cursorToEdit.getColumnIndex(DatabseColumns.TITLE)));
+        }
         return view;
     }
 
+    private void setAllItems(Cursor cursorToEdit) {
+        String title=cursorToEdit.getString(cursorToEdit.getColumnIndex(DatabseColumns.TITLE));
+        String desc=cursorToEdit.getString(cursorToEdit.getColumnIndex(DatabseColumns.DESCRIPTION));
+        String date=cursorToEdit.getString(cursorToEdit.getColumnIndex(DatabseColumns.DATE));
+        long time=cursorToEdit.getLong(cursorToEdit.getColumnIndex(DatabseColumns.TIME));
+        int prio=cursorToEdit.getInt(cursorToEdit.getColumnIndex(DatabseColumns.PRIORITY));
+
+        todoTitle.setText(title);
+        //todoTitle.findFocus();
+        todoDescription.setText(desc);
+        if(prio==1)
+            spinner.setSelection(0);
+        else
+            spinner.setSelection(1);
+
+        /*
+        int day=Integer.parseInt(date.substring(0,date.indexOf('-')-1));
+        int mon=Integer.parseInt(date.substring(date.indexOf('-')+1,date.indexOf('/')-1));
+        int yr=Integer.parseInt(date.substring(date.indexOf('/')+1,date.length()-1));*/
+        //datePicker.setMaxDate();
+        //Log.e( "setAllItems: ",""+day+" "+mon+" "+yr);
+    }
+
     private void insertInDatabase() {
-        date=datePicker.getDayOfMonth()+"-"+(datePicker.getMonth()+1)+"-"+datePicker.getYear();
+        //date=datePicker.getDayOfMonth()+"-"+(datePicker.getMonth()+1)+"-"+datePicker.getYear();
+        date=datePicker.getDayOfMonth()+"-"+(datePicker.getMonth()+1)+"/"+datePicker.getYear();
         Calendar calendar=Calendar.getInstance();
         time=calendar.getTimeInMillis();
 
@@ -96,7 +142,11 @@ public class NotesFragment extends DialogFragment implements AdapterView.OnItemS
         values.put(DatabseColumns.PRIORITY,object.getPriority());
         values.put(DatabseColumns.TIME,object.getTime());
 
+        if(!getArguments().getBoolean("editable"))
         getActivity().getContentResolver().insert(QuoteProvider.Quotes.CONTENT_URI,values);
+        else
+        getActivity().getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI,values,DatabseColumns.ID+"=?",
+                new String[]{String.valueOf(getArguments().getInt("position"))});
         getDialog().dismiss();
     }
 
